@@ -2,9 +2,9 @@
 Author: Rocky Rudolph
 Date: 7/1/2019
 Purpose: Custom tools for seabird "dotting" data collection.  ArcMap was the chosen software
-to dot stitched photos of seabrid colonies on Anacapa and Santa Barbara Islands.  Each stitched photo
-will be dotted in an mxd file.  These tools help automate the creation of a featureclass to help the 
-user create a consistant dataset when creating each featureclass. Can be used with ArcGIS Pro.
+to dot stitched photos of seabird colonies on Anacapa and Santa Barbara Islands.  Each stitched photo
+will be dotted in an mxd file.  These tools will assist data entry staff automate with processes that help 
+create a consistent dataset. Can be used with ArcGIS Pro.
 
 """
 
