@@ -1,3 +1,5 @@
+# Testing and/or experimental script, you can safely ignore this. 
+
 import pathlib, yaml
 
 def get_config():

@@ -1,3 +1,5 @@
+# Testing and/or experimental script, you can safely ignore this. 
+
 print("Importing modules")
 import arcpy, os
 from dateutil.parser import parse

@@ -1,4 +1,4 @@
-
+# Testing and/or experimental script, you can safely ignore this. 
 
 print("Importing modules")
 import arcpy, csv, glob, os

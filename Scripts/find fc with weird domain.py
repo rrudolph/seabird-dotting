@@ -1,3 +1,4 @@
+# Testing and/or experimental script, you can safely ignore this. 
 import arcpy
 
 arcpy.env.workspace = r"C:\GIS\Projects\Seabird\BRPE Dotting Database\Sample data Jan 2022\Seabird_Photo_Dotting\Seabird_Photo_Dotting.gdb"

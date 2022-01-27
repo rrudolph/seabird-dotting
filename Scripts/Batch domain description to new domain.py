@@ -1,3 +1,5 @@
+# Testing and/or experimental script, you can safely ignore this. 
+
 # Code for quickly matching the invasive species geodatabase domain with a pick-list in the
 # trimble data dictionary.  Specify the domain name to processes below. Output will be a csv
 # file. Open this file in a text editor such as Sublime Text.  Paste in values (including the commas)
