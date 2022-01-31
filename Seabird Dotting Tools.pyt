@@ -6,6 +6,7 @@ to dot stitched photos of seabird colonies on Anacapa and Santa Barbara Islands.
 will be dotted in an mxd file.  These tools will assist data entry staff automate with processes that help 
 create a consistent dataset. Can be used with ArcGIS Pro.
 
+Updated 1/31/22: Added yaml domain creation from yaml file to make a blank geodatabase for another use. 
 """
 
 import arcpy
