@@ -417,7 +417,8 @@ class GenerateXLS(object):
         param0 = arcpy.Parameter(
         displayName="Input database(s)",
         name="inputDB",
-        datatype="GPString",
+        # datatype="GPString",
+        datatype="DEWorkspace",
         parameterType="Required",
         direction="Input",
         multiValue=True)
