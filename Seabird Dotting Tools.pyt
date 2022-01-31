@@ -11,39 +11,47 @@ create a consistent dataset. Can be used with ArcGIS Pro.
 import arcpy
 import os
 import datetime
-import pathlib
-import random
 import subprocess
+import yaml
 from dateutil.parser import parse
 
 def msg(string):
     print(string)
     arcpy.AddMessage(string)
 
-def find_python2():
-    possible_versions = range(4,10)
-    for ver in possible_versions:
-        path  = r"C:\Python27\ArcGIS10.{}\python.exe".format(ver)
-        # print(path)
-        if os.path.exists(path):
-            return path
+## None of this automatic pip install stuff works in ArcMap.  Need to just manually run pip from ArcMap python
+# window for best results
 
-try:
-    import yaml
-except:
-
-    py_path = find_python2()
-
-    if py_path:
-        msg(py_path)
-
-        # implement pip as a subprocess:
-        subprocess.check_call([py_path, '-m', 'pip', 'install', 'pyyaml'])
-
-    else:
-        msg("Error importing pyyaml or couldn't find python path")
+# like so:
+# import subprocess; subprocess.check_call(['python.exe', '-m', 'pip', 'install', 'pyyaml']); subprocess.check_call(['python.exe', '-m', 'pip', 'install', 'pathlib'])
 
 
+# def find_python2():
+#     possible_versions = range(4,10)
+#     for ver in possible_versions:
+#         path  = r"C:\Python27\ArcGIS10.{}\python.exe".format(ver)
+#         # print(path)
+#         if os.path.exists(path):
+#             return path
+#         else:
+#             sys.exit("Could not find python2 executable. Contact GIS support.")
+
+# def install_package(exec_path, package_name):
+#     msg("Installing {} package...".format(package_name))
+#     subprocess.check_call([exec_path, '-m', 'pip', 'install', package_name])
+
+# py_path = find_python2()
+
+# try:
+#     import yaml
+# except:
+#     install_package(py_path, "pyyaml")
+
+
+# try:
+#     import pathlib
+# except:
+#     install_package(py_path, "pathlib")
 
 
 
@@ -113,13 +121,15 @@ class GenerateNewGDB(object):
         path = parameters[0].valueAsText
         gdb_name = parameters[1].valueAsText
 
-        def get_config():
-            here = pathlib.Path(__file__).parent
-            with open(here.joinpath("SupportFiles","Dotting_domains.yaml")) as f:
+        def get_domains():
+            dir_path = os.path.dirname(os.path.realpath(__file__))
+            domains_file = os.path.join(dir_path, "SupportFiles","Dotting_domains.yaml") 
+            msg("Config file: {}".format( domains_file))
+            with open(domains_file) as f:
                 return yaml.safe_load(f)
                 
 
-        domain_dict = get_config()
+        domain_dict = get_domains()
 
         if not gdb_name.endswith(".gdb"):
             gdb_name = gdb_name + ".gdb"
@@ -129,20 +139,20 @@ class GenerateNewGDB(object):
 
         arcpy.management.CreateFileGDB(path, gdb_name, "CURRENT")
 
-        for domain, domain_list in domain_dict.items():
+        for domain_name, domain_list in domain_dict.items():
 
             domain_list.sort()
 
-            msg("Creating domain {}".format(domain))
+            msg("Creating domain {}".format(domain_name))
             arcpy.CreateDomain_management(out_gdb, 
-                domain,
-                domain,
+                domain_name,
+                domain_name,
                 "TEXT",
                 "CODED")
             
-            for code in domain_list:
-                msg("Adding {} to domain".format(code))
-                arcpy.AddCodedValueToDomain_management(out_gdb, domain, code, code)
+            for domain in domain_list:
+                msg("Adding {} to {} domain".format(domain, domain_name))
+                arcpy.AddCodedValueToDomain_management(out_gdb, domain_name, domain, domain)
 
         msg("Done.")
 
