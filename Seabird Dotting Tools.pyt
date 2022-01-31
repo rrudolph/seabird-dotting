@@ -11,14 +11,41 @@ create a consistent dataset. Can be used with ArcGIS Pro.
 import arcpy
 import os
 import datetime
-import yaml
 import pathlib
 import random
+import subprocess
 from dateutil.parser import parse
 
 def msg(string):
     print(string)
     arcpy.AddMessage(string)
+
+def find_python2():
+    possible_versions = range(4,10)
+    for ver in possible_versions:
+        path  = r"C:\Python27\ArcGIS10.{}\python.exe".format(ver)
+        # print(path)
+        if os.path.exists(path):
+            return path
+
+try:
+    import yaml
+except:
+
+    py_path = find_python2()
+
+    if py_path:
+        msg(py_path)
+
+        # implement pip as a subprocess:
+        subprocess.check_call([py_path, '-m', 'pip', 'install', 'pyyaml'])
+
+    else:
+        msg("Error importing pyyaml or couldn't find python path")
+
+
+
+
 
 class Toolbox(object):
     def __init__(self):
@@ -28,7 +55,12 @@ class Toolbox(object):
         self.alias = ""
 
         # List of tool classes associated with this toolbox
-        self.tools = [GenerateNewGDB, CreateNewDotting, CalculateFields, GenerateXLS]
+        self.tools = [
+            GenerateNewGDB,
+            CreateNewDotting,
+            CalculateFields,
+            GenerateXLS
+        ]
 
 class GenerateNewGDB(object):
     def __init__(self):
