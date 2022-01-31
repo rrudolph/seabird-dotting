@@ -6,7 +6,8 @@ to dot stitched photos of seabird colonies on Anacapa and Santa Barbara Islands.
 will be dotted in an mxd file.  These tools will assist data entry staff automate with processes that help 
 create a consistent dataset. Can be used with ArcGIS Pro.
 
-Updated 1/31/22: Added yaml domain creation from yaml file to make a blank geodatabase for another use. 
+Updated 1/31/22: Added yaml domain creation from yaml file to make a blank geodatabase for another user. 
+                Made the xls merger tool multi-database.
 """
 
 import arcpy
@@ -19,6 +20,10 @@ from dateutil.parser import parse
 def msg(string):
     print(string)
     arcpy.AddMessage(string)
+
+def get_count(fc):
+    result = arcpy.GetCount_management(fc)
+    return int(result.getOutput(0))
 
 ## None of this automatic pip install stuff works in ArcMap.  Need to just manually run pip from ArcMap python
 # window for best results
@@ -475,19 +480,25 @@ class GenerateXLS(object):
         msg(outName)
         outFile = os.path.join(outDir, outName)
         mergeList = []
+        record_count = 0
+        fc_count = 0
+        db_count = 0
 
         tempFC = "in_memory/Merge"
 
         for inputDB in inputDBs:
+            db_count += 1
 
             arcpy.env.workspace = inputDB
             fcs = arcpy.ListFeatureClasses()
 
             for fc in fcs:
+                fc_count += 1
+                record_count += get_count(fc)
                 msg("Creating merge list for " + fc)
                 mergeList.append(os.path.join(inputDB, fc))
 
-        msg("Merging: {}".format(mergeList))
+        msg("Merging all featureclasses")
         arcpy.Merge_management(
             inputs=mergeList, 
             output=tempFC
@@ -496,10 +507,16 @@ class GenerateXLS(object):
         msg("Generating xls: " + outFile)
         arcpy.TableToExcel_conversion(tempFC, outFile)
 
-        msg("Deleting temp data")
+        msg("\n-----Merge Stats-------")
+        msg("Databases merged: {} Featureclasses merged: {}  Records merged: {}".format(db_count, fc_count, record_count))
+
+        msg("\nDeleting temporary data")
         arcpy.Delete_management(tempFC)
         del tempFC
+        del mergeList
+        del record_count 
+        del fc_count 
+        del db_count 
 
-
-        msg("Done.")
+        msg("\nDone.")
         return
