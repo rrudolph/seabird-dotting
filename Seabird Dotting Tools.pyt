@@ -23,7 +23,7 @@ def msg(string):
 # window for best results
 
 # like so:
-# import subprocess; subprocess.check_call(['python.exe', '-m', 'pip', 'install', 'pyyaml']); subprocess.check_call(['python.exe', '-m', 'pip', 'install', 'pathlib'])
+# import subprocess; subprocess.check_call(['python.exe', '-m', 'pip', 'install', 'pyyaml'])
 
 
 # def find_python2():
@@ -46,12 +46,6 @@ def msg(string):
 #     import yaml
 # except:
 #     install_package(py_path, "pyyaml")
-
-
-# try:
-#     import pathlib
-# except:
-#     install_package(py_path, "pathlib")
 
 
 
