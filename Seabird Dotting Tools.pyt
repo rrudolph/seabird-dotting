@@ -488,7 +488,10 @@ class GenerateXLS(object):
         arcpy.TableToExcel_conversion(tempFC, outFile)
 
         msg("\n-----Merge Stats-------")
-        msg("Databases merged: {} Featureclasses merged: {}  Records merged: {}".format(db_count, fc_count, record_count))
+        msg('''
+Databases merged: {}
+Featureclasses merged: {}
+Records merged: {}'''.format(db_count, fc_count, record_count))
 
         msg("\nDeleting temporary data")
         arcpy.Delete_management(tempFC)
