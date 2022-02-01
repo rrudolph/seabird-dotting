@@ -464,7 +464,11 @@ class GenerateXLS(object):
         record_count = 0
         fc_count = 0
         db_count = 0
+
         temp_fc = "in_memory/Merge"
+
+        if arcpy.Exists(temp_fc):
+            arcpy.Delete_management(temp_fc)
 
         for input_db in input_dbs:
             db_count += 1
@@ -494,9 +498,9 @@ Featureclasses merged: {}
 Records merged: {}'''.format(db_count, fc_count, record_count))
 
         msg("\nDeleting temporary data")
-        arcpy.Delete_management(tempFC)
-        del tempFC
-        del mergeList
+        arcpy.Delete_management(temp_fc)
+        del temp_fc
+        del merge_list
         del record_count 
         del fc_count 
         del db_count 
