@@ -442,50 +442,50 @@ class GenerateXLS(object):
     def execute(self, parameters, messages):
         """The source code of the tool."""
         
-        inputDBs = parameters[0].valueAsText.replace("'", "").split(";")
+        input_dbs = parameters[0].valueAsText.replace("'", "").split(";")
 
-        outDir = parameters[1].valueAsText
-        Overwrite = parameters[2].valueAsText
-        msg("Overwrite output setting: " + str(Overwrite))
+        out_dir = parameters[1].valueAsText
+        is_overwrite = parameters[2].valueAsText
+        msg("Overwrite output setting: " + str(is_overwrite))
 
-        if Overwrite == "true":
+        if is_overwrite == "true":
             arcpy.env.overwriteOutput = True
         else:
             arcpy.env.overwriteOutput = False
 
         now = datetime.datetime.today()
 
-        outName = "Seabird_Dotting_Export_Table_" + now.strftime("%Y_%m_%d_%H_%M") + ".xls"
-        msg(outName)
-        outFile = os.path.join(outDir, outName)
+        out_name = "Seabird_Dotting_Export_Table_{}.xls".format(now.strftime("%Y_%m_%d_%H_%M"))
+        msg(out_name)
+        out_file = os.path.join(out_dir, out_name)
 
         # Temp data and stats vars
-        mergeList = []
+        merge_list = []
         record_count = 0
         fc_count = 0
         db_count = 0
-        tempFC = "in_memory/Merge"
+        temp_fc = "in_memory/Merge"
 
-        for inputDB in inputDBs:
+        for input_db in input_dbs:
             db_count += 1
 
-            arcpy.env.workspace = inputDB
+            arcpy.env.workspace = input_db
             fcs = arcpy.ListFeatureClasses()
 
             for fc in fcs:
                 fc_count += 1
                 record_count += get_count(fc)
-                msg("Creating merge list for " + fc)
-                mergeList.append(os.path.join(inputDB, fc))
+                msg("Creating merge list for {}".format(fc))
+                merge_list.append(os.path.join(input_db, fc))
 
         msg("Merging all featureclasses")
         arcpy.Merge_management(
-            inputs=mergeList, 
-            output=tempFC
+            inputs=merge_list, 
+            output=temp_fc
             )
 
-        msg("Generating xls: " + outFile)
-        arcpy.TableToExcel_conversion(tempFC, outFile)
+        msg("Generating xls: {}".format(out_file))
+        arcpy.TableToExcel_conversion(temp_fc, out_file)
 
         msg("\n-----Merge Stats-------")
         msg('''
