@@ -24,7 +24,7 @@ import subprocess; subprocess.check_call(['python.exe', '-m', 'pip', 'install', 
 import yaml 
 
 def msg(string):
-    '''Prints to concole and adds message int arcpy tool window'''
+    '''Prints to concole and adds message to arcpy tool window'''
     print(string)
     arcpy.AddMessage(string)
 
