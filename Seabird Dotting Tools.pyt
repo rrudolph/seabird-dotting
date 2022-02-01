@@ -14,45 +14,24 @@ import arcpy
 import os
 import datetime
 import subprocess
-import yaml
 from dateutil.parser import parse
 
+'''
+yaml could be a problem if using ArcMap, since it's not loaded by default.  Have user run this command
+in the arcpy python window
+import subprocess; subprocess.check_call(['python.exe', '-m', 'pip', 'install', 'pyyaml'])
+'''
+import yaml 
+
 def msg(string):
+    '''Prints to concole and adds message int arcpy tool window'''
     print(string)
     arcpy.AddMessage(string)
 
 def get_count(fc):
+    '''Returns integer count of records in the featureclass'''
     result = arcpy.GetCount_management(fc)
-    return int(result.getOutput(0))
-
-## None of this automatic pip install stuff works in ArcMap.  Need to just manually run pip from ArcMap python
-# window for best results
-
-# like so:
-# import subprocess; subprocess.check_call(['python.exe', '-m', 'pip', 'install', 'pyyaml'])
-
-
-# def find_python2():
-#     possible_versions = range(4,10)
-#     for ver in possible_versions:
-#         path  = r"C:\Python27\ArcGIS10.{}\python.exe".format(ver)
-#         # print(path)
-#         if os.path.exists(path):
-#             return path
-#         else:
-#             sys.exit("Could not find python2 executable. Contact GIS support.")
-
-# def install_package(exec_path, package_name):
-#     msg("Installing {} package...".format(package_name))
-#     subprocess.check_call([exec_path, '-m', 'pip', 'install', package_name])
-
-# py_path = find_python2()
-
-# try:
-#     import yaml
-# except:
-#     install_package(py_path, "pyyaml")
-
+    return int(result[0])
 
 
 class Toolbox(object):
@@ -479,11 +458,12 @@ class GenerateXLS(object):
         outName = "Seabird_Dotting_Export_Table_" + now.strftime("%Y_%m_%d_%H_%M") + ".xls"
         msg(outName)
         outFile = os.path.join(outDir, outName)
+
+        # Temp data and stats vars
         mergeList = []
         record_count = 0
         fc_count = 0
         db_count = 0
-
         tempFC = "in_memory/Merge"
 
         for inputDB in inputDBs:
