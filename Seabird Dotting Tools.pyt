@@ -202,7 +202,6 @@ class CreateNewDotting(object):
         surveyArea = parameters[2].valueAsText
 
         arcpy.env.workspace = targetDB
-        srcDir = os.path.dirname(os.path.realpath(__file__))
         templateFC = os.path.join(srcDir,"SupportFiles", "Template.gdb", "TemplateFC")
 
         newFCName = "Dot_" + surveyArea + "_" + parse(surveyDate).strftime("%Y_%m_%d")
