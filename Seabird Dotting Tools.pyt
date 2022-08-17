@@ -25,8 +25,9 @@ import yaml
 
 def msg(string):
     '''Prints to console and adds message to arcpy tool window'''
-    print(string)
-    arcpy.AddMessage(string)
+    if string:
+        print(string)
+        arcpy.AddMessage(string)
 
 def get_count(fc):
     '''Returns integer count of records in the featureclass'''
@@ -347,40 +348,54 @@ class CalculateFields(object):
             arcpy.CalculateField_management(
                 in_table=inFC, 
                 field=field, 
-                expression='"{}"'.format(contents), 
+                expression='"{}"'.format(contents.replace("\\", "/")), 
                 expression_type="PYTHON_9.3", 
                 code_block="")
 
 
         # Dynamic variables
         inFC = parameters[0].valueAsText
-        SURVEY_DATE = parse(str(parameters[1].value)).strftime("%m/%d/%Y")
-        DOTTED_DATE = parse(str(parameters[2].value)).strftime("%m/%d/%Y")
+        if parameters[1].value:
+            SURVEY_DATE = parse(str(parameters[1].value)).strftime("%m/%d/%Y")
+        else:
+            SURVEY_DATE = None
+        if parameters[2].value:
+            DOTTED_DATE = parse(str(parameters[2].value)).strftime("%m/%d/%Y")
+        else:
+            DOTTED_DATE = None
         DOTTER_ID = parameters[3].valueAsText
         ISLAND = parameters[4].valueAsText
         SUBCOLONY = parameters[5].valueAsText
         SPECIES = parameters[6].valueAsText
         PHOTO_PATH = parameters[7].valueAsText
 
-        if SURVEY_DATE is not None:
+
+        msg(inFC)
+        msg(DOTTER_ID)
+        msg(ISLAND)
+        msg(SUBCOLONY)
+        msg(SPECIES)
+        msg(PHOTO_PATH)
+
+        if SURVEY_DATE:
             calcField("SURVEY_DATE", SURVEY_DATE)
 
-        if DOTTED_DATE is not None:
+        if DOTTED_DATE:
             calcField("DOTTED_DATE", DOTTED_DATE)
 
-        if DOTTER_ID is not None:
+        if DOTTER_ID:
             calcField("DOTTER_ID", DOTTER_ID)
 
-        if ISLAND is not None:
+        if ISLAND:
             calcField("ISLAND", ISLAND)
 
-        if SUBCOLONY is not None:
+        if SUBCOLONY:
             calcField("SUBCOLONY", SUBCOLONY)
 
-        if SPECIES is not None:
+        if SPECIES:
             calcField("SPECIES", SPECIES)
 
-        if PHOTO_PATH is not None:
+        if PHOTO_PATH:
             calcField("PHOTO_PATH", PHOTO_PATH)
 
         msg("Done.")
